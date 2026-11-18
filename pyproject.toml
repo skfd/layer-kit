@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "layerkit"
+version = "0.1.0-dev"
+description = "The plumbing the OSM reference-layer repos share: Overpass fetch, gap history, tile math, WSL, gh-pages publish."
+requires-python = ">=3.11"
+dependencies = ["requests", "addressvault"]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.setuptools.packages.find]
+include = ["layerkit*"]
