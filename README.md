@@ -28,7 +28,8 @@ publish wiring without touching git) and `fnhash.py` (count how many variants
 of each function the layers carry).
 
 Still on its own copy, on purpose: `toronto-streets-layer`'s history, which
-records source releases, not OSM gaps. `toronto-parks-layer` is the one layer
+records source releases, not OSM gaps; and all of `toronto-waterways-layer`,
+which is archived. `toronto-parks-layer` is the one layer
 that still accepts an undated Overpass reply; it is marked at the call.
 
 ## What is not
