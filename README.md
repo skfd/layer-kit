@@ -19,6 +19,17 @@ other seven. This package is where that code lives now, once.
 | `publish` | Push a built site to the orphan `gh-pages` branch, retrying a network failure. |
 | `wsl` | Run tippecanoe's commands inside WSL, or directly off Windows. |
 | `tilemath` | Web Mercator tile and pixel math. |
+| `geom` | The few geometry helpers that were identical across matchers: metres between points, bbox overlap, point in ring, stitching a relation's outer ways. |
+
+`tools/` holds what moved the layers over, kept for the next layer cloned from
+an old sibling: `adopt.py` (point a layer's plumbing at the kit),
+`lift_geom.py`, `refuse_undated.py`, `pubcheck.py` (dry-check a layer's
+publish wiring without touching git) and `fnhash.py` (count how many variants
+of each function the layers carry).
+
+Still on its own copy, on purpose: `toronto-streets-layer`'s history, which
+records source releases, not OSM gaps. `toronto-parks-layer` is the one layer
+that still accepts an undated Overpass reply; it is marked at the call.
 
 ## What is not
 
