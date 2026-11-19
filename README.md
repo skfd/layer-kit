@@ -39,9 +39,10 @@ that still accepts an undated Overpass reply; it is marked at the call.
 - **A layer's data.** Each layer keeps its own gap history, cache and config.
   Every function here takes paths and settings as arguments and keeps no state.
 - **The matcher.** How City features are paired with OSM ones differs by
-  geometry and by layer, and stays in each layer's `compare.py`. So do
-  `download`, `slim`, `raster` and `site`, which every layer has its own
-  version of.
+  geometry and by layer, and stays in each layer's `compare.py`. So do `slim`,
+  `raster` and `site`, which every layer has its own version of, and most of
+  `download`: what to fetch, how to check it and how to cache it are the
+  layer's; only the fetch itself is here.
 - **A runner.** Each layer still has its own `run.py` and scheduled task.
 
 ## How a layer uses it
@@ -61,9 +62,9 @@ def _try_overpass(url, query):
 ```
 
 The wrappers are there so a layer's tests, which patch `config`,
-`compare._try_overpass`, `history.seed` and `publish._git`, keep working
-unchanged. For the same reason the kit calls `requests.post`, `time.sleep` and
-`net.wait_for_link` through their modules.
+`compare._try_overpass`, `download.RETRIES`, `history.seed` and `publish._git`,
+keep working unchanged. For the same reason the kit calls `requests.post`,
+`requests.get`, `time.sleep` and `net.wait_for_link` through their modules.
 
 ## Install
 
