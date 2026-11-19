@@ -15,6 +15,7 @@ other seven. This package is where that code lives now, once.
 | Module | What it does |
 |---|---|
 | `overpass` | Fetch a layer's OSM half: every mirror, retried; refuse empty, stale and undated replies; fall back to the cache and say so. |
+| `citydata` | Fetch a layer's City half: a generated reply into memory (`get`), or a big static file to disk, resuming a dropped connection (`stream`); and refuse an ArcGIS 200 that is not a whole FeatureCollection. |
 | `history` | Read and write a layer's gap history (`data/history.jsonl`, one row per day). |
 | `publish` | Push a built site to the orphan `gh-pages` branch, retrying a network failure. |
 | `wsl` | Run tippecanoe's commands inside WSL, or directly off Windows. |
@@ -23,13 +24,14 @@ other seven. This package is where that code lives now, once.
 
 `tools/` holds what moved the layers over, kept for the next layer cloned from
 an old sibling: `adopt.py` (point a layer's plumbing at the kit),
-`lift_geom.py`, `refuse_undated.py`, `pubcheck.py` (dry-check a layer's
+`lift_geom.py`, `lift_citydata.py`, `refuse_undated.py`, `pubcheck.py` (dry-check a layer's
 publish wiring without touching git) and `fnhash.py` (count how many variants
 of each function the layers carry).
 
 Still on its own copy, on purpose: `toronto-streets-layer`'s history, which
 records source releases, not OSM gaps; and all of `toronto-waterways-layer`,
-which is archived. `toronto-parks-layer` is the one layer
+which is archived. `guelph-bike-layer` and `guelph-sidewalks-layer` keep their paged ArcGIS
+`_query`, which returns parsed JSON and is tested that way. `toronto-parks-layer` is the one layer
 that still accepts an undated Overpass reply; it is marked at the call.
 
 ## What is not
