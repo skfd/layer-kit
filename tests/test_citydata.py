@@ -200,3 +200,33 @@ def test_a_whole_collection_passes():
 def test_a_200_that_is_not_a_whole_collection_is_refused(body, says):
     with pytest.raises(RuntimeError, match=says):
         citydata.check_feature_collection(body)
+
+
+def _row(gid, width=1.5):
+    return {"type": "Feature", "geometry": {"type": "Point", "coordinates": [0, 0]},
+            "properties": {"OBJECTID": 1, "WIDTH": width, "GlobalID": gid}}
+
+
+def test_digest_with_nothing_ignored_is_the_hash_of_the_compact_body():
+    import hashlib
+    rows = [_row("{A}")]
+    body = json.dumps({"type": "FeatureCollection", "features": rows},
+                      separators=(",", ":")).encode("utf-8")
+    assert citydata.digest(rows) == hashlib.sha256(body).hexdigest()
+
+
+def test_digest_does_not_see_an_ignored_field_change():
+    assert (citydata.digest([_row("{A}")], ignore=("GlobalID",))
+            == citydata.digest([_row("{B}")], ignore=("GlobalID",)))
+    assert citydata.digest([_row("{A}")]) != citydata.digest([_row("{B}")])
+
+
+def test_digest_still_sees_a_real_change():
+    assert (citydata.digest([_row("{A}")], ignore=("GlobalID",))
+            != citydata.digest([_row("{A}", width=2.0)], ignore=("GlobalID",)))
+
+
+def test_digest_leaves_the_rows_it_was_given_alone():
+    rows = [_row("{A}")]
+    citydata.digest(rows, ignore=("GlobalID",))
+    assert rows[0]["properties"]["GlobalID"] == "{A}"

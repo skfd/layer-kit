@@ -15,7 +15,7 @@ other seven. This package is where that code lives now, once.
 | Module | What it does |
 |---|---|
 | `overpass` | Fetch a layer's OSM half: every mirror, retried; refuse empty, stale and undated replies; fall back to the cache and say so. |
-| `citydata` | Fetch a layer's City half: a generated reply into memory (`get`), or a big static file to disk, resuming a dropped connection (`stream`); and refuse an ArcGIS 200 that is not a whole FeatureCollection. |
+| `citydata` | Fetch a layer's City half: a generated reply into memory (`get`), or a big static file to disk, resuming a dropped connection (`stream`); refuse an ArcGIS 200 that is not a whole FeatureCollection; and hash the features to tell a real City edit from a reissued `GlobalID` (`digest`). |
 | `history` | Read and write a layer's gap history (`data/history.jsonl`, one row per day). |
 | `publish` | Push a built site to the orphan `gh-pages` branch, retrying a network failure. |
 | `wsl` | Run tippecanoe's commands inside WSL, or directly off Windows. |
@@ -24,7 +24,8 @@ other seven. This package is where that code lives now, once.
 
 `tools/` holds what moved the layers over, kept for the next layer cloned from
 an old sibling: `adopt.py` (point a layer's plumbing at the kit),
-`lift_geom.py`, `lift_citydata.py`, `refuse_undated.py`, `pubcheck.py` (dry-check a layer's
+`lift_geom.py`, `lift_citydata.py`, `refuse_undated.py`, `redate_citydata.py` (point a
+download sidecar back at the day the City data last really changed), `pubcheck.py` (dry-check a layer's
 publish wiring without touching git) and `fnhash.py` (count how many variants
 of each function the layers carry).
 

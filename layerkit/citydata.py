@@ -23,6 +23,7 @@ The layers' tests patch ``requests.get``, ``time.sleep`` and
 ``net.wait_for_link``, and a ``from x import y`` here would step around that.
 """
 
+import hashlib
 import json
 import time
 
@@ -134,6 +135,28 @@ def check_feature_collection(body):
     print(f"  {n:,} features")
     if not n:
         raise RuntimeError("The service returned an empty FeatureCollection.")
+
+
+def digest(features, *, ignore=()):
+    """sha256 of ``features`` as a FeatureCollection, leaving out ``ignore``.
+
+    This is what a layer compares between runs to tell whether the City
+    touched its data. ``ignore`` names properties the service makes up afresh
+    on every request: Guelph's paged ``/query`` services hand out a new
+    ``GlobalID`` for every row each time they are asked, so a hash that kept
+    it changed every run and dated the City data to the last build. With no
+    ``ignore`` it is the plain hash of the compact body the layers have always
+    written.
+    """
+    if ignore:
+        drop = set(ignore)
+        features = [
+            {**f, "properties": {k: v for k, v in (f.get("properties") or {}).items()
+                                 if k not in drop}}
+            for f in features]
+    body = json.dumps({"type": "FeatureCollection", "features": features},
+                      separators=(",", ":")).encode("utf-8")
+    return hashlib.sha256(body).hexdigest()
 
 
 def _int(val):
